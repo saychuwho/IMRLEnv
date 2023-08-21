@@ -16,7 +16,7 @@ at PLATFORM_YOU_WANT, put ```windows-desktop``` to use windows desktop environme
 
 Linux headless environment is default, so you don't need to enter anything at --platform and execute like this
 
-```python IMRLEnv_main.py```
+```python3 IMRLEnv_main.py```
 
 Arguments may added further.
 
