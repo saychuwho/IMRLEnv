@@ -1,6 +1,6 @@
 # IMRLEnv (Intersection Management Reinforcement Learning Environment)
 
-<img src="./image/20230816_IMRLEnv_02.png" width="500">
+<img src="./image/20230821_IMRLEnv_01.png" width="500">
 
 This project is Reinforcement Learning Environment to make optimized agent controls intersection with traffic lights
 
@@ -38,15 +38,23 @@ Made with Unity and powered by [unity ml-agent](https://github.com/Unity-Technol
 - Random Agent
 - DQN based Agent(Work in Progress)
 
-## platform
+## Platform Setting
 
 Environment currently works on Windows. In Linux, have to check.
+
+Also, this environment was tested in these conditions
+
+- python 3.7.16 working on anaconda
+- Unity ML-Agent (unity) : 2.0.0 
+- mlagents, mlagents-env : 0.26.0
+- torch : 1.8.0+cu111
+- CUDA : 11.8
+- protobuf : 3.20.3
 
 ## Current Issue
 
 It is not done yet because of these issues
 
-1. When episode ends and start another episode, vehicles spawned by TSTrafficSpawner won't move properly. 
-2. Step Reward is too large
+1. Step Reward is too large
 
 When these issues are solved, environment should work well.

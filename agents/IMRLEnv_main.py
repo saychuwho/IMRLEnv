@@ -34,7 +34,7 @@ class CustomSideChannel(SideChannel):
 '''
 
 def main():
-    env = UnityEnvironment(file_name='../IMRLEnv/IMRLEnv')
+    env = UnityEnvironment(file_name='../IMRLEnv_Windows/IMRLEnv')
 
     RandomAgent.main(env)
 
