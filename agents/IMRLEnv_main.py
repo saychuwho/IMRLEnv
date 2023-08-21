@@ -14,7 +14,7 @@ import uuid
 import IMRLEnv_random_agent as RandomAgent
 from mlagents_envs.environment import UnityEnvironment
 import numpy as np
-
+import argparse
 
 
 '''
@@ -34,8 +34,23 @@ class CustomSideChannel(SideChannel):
 '''
 
 def main():
-    env = UnityEnvironment(file_name='../IMRLEnv_Windows/IMRLEnv')
+    parser = argparse.ArgumentParser()
 
+    parser.add_argument('--platform', type=str, default='linux-server', help='Select platform running IMRLEnv')
+    parser.add_argument('--agent', type=str, default='random_agent', help='select agent')
+
+    args = parser.parse_args()
+    
+    env_file_name = '../IMRLEnv_{}/IMRLEnv'.format('Linux_Headless')
+    if(args.platform == 'windows-desktop'):
+        env_file_name = '../IMRLEnv_{}/IMRLEnv'.format('Windows_Desktop')
+    elif(args.platform == 'windows-server'):
+        env_file_name = '../IMRLEnv_{}/IMRLEnv'.format('Windows_Headless')
+    elif(args.platform == 'linux-desktop'):
+        env_file_name = '../IMRLEnv_{}/IMRLEnv'.format('Linux_Desktop')
+
+
+    env = UnityEnvironment(file_name=env_file_name)
     RandomAgent.main(env)
 
 

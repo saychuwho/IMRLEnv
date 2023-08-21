@@ -6,6 +6,20 @@ This project is Reinforcement Learning Environment to make optimized agent contr
 
 Made with Unity and powered by [unity ml-agent](https://github.com/Unity-Technologies/ml-agents) and [iTS - Intelligent Traffic System](https://assetstore.unity.com/packages/templates/systems/its-intelligent-traffic-system-source-22765)
 
+## How to execute
+
+Clone this repository. Then, inside ./agents, execute 'IMRLEnv_main.py' like this
+
+```python IMRLEnv_main.py --platform PLATFORM_YOU_WANT```
+
+at PLATFORM_YOU_WANT, put ```windows-desktop``` to use windows desktop environment, put ```windows-server``` to use windows headless environment, put ```linux-desktop``` to use linux desktop environment. 
+
+Linux headless environment is default, so you don't need to enter anything at --platform and execute like this
+
+```python IMRLEnv_main.py```
+
+Arguments may added further.
+
 ## How this environment works
 
 <img src="./image/20230816_intersection01.png" width="500">
@@ -26,7 +40,8 @@ Made with Unity and powered by [unity ml-agent](https://github.com/Unity-Technol
   - Total action size : 12
 
 - Reward
-  - At every step, "scaled total average waiting time" will given as minus reward
+  - ~~At every step, "scaled total average waiting time" will given as minus reward~~
+    - step reward is not given now.
   - At the end of episode, "scaled total average traveling time will given as plus reward
 
 - End of Episode
@@ -40,21 +55,30 @@ Made with Unity and powered by [unity ml-agent](https://github.com/Unity-Technol
 
 ## Platform Setting
 
-Environment currently works on Windows. In Linux, have to check.
+There are four version of the env
+
+- Linux Desktop : not tested
+- Linux Headless : not tested
+- Windows Desktop : tested with Random Agent, working
+- Windows Headless : tested with Random Agent, working
 
 Also, this environment was tested in these conditions
 
-- python 3.7.16 working on anaconda
-- Unity ML-Agent (unity) : 2.0.0 
-- mlagents, mlagents-env : 0.26.0
-- torch : 1.8.0+cu111
-- CUDA : 11.8
-- protobuf : 3.20.3
+- both Linux and Windows 11
+  - Unity ML-Agent (unity) : 2.0.0 
+  - mlagents, mlagents-env : 0.26.0
 
-## Current Issue
+- At Windows 11
+  - python 3.7.16 working on anaconda
+  - torch : 1.8.0+cu111
+  - CUDA : 11.8
+  
+- At Linux(Ubuntu 20.04)
+  - python 3.8.17 working on anaconda
+  - protobuf : 3.20.0
+  - CUDA : 11.4
 
-It is not done yet because of these issues
+## Changes
 
-1. Step Reward is too large
-
-When these issues are solved, environment should work well.
+- 2023.08.21 : solved environment reset problem, uploaded several different platform version of IMRLEnv, add argument option to select platform.
+- 2023.08.17 : first commit
