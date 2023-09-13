@@ -1,5 +1,5 @@
-# sets env with SideChannel
 '''
+# sets env with SideChannel
 # modules for SideChannel. not used
 from mlagents_envs.side_channel import IncomingMessage
 
@@ -11,7 +11,8 @@ from mlagents_envs.side_channel.side_channel import(
 import uuid
 '''
 
-import IMRLEnv_random_agent as RandomAgent
+import IMRLEnv_random_agent as random_agent
+import IMRLEnv_dqn as dqn_agent
 from mlagents_envs.environment import UnityEnvironment
 import numpy as np
 import argparse
@@ -41,17 +42,13 @@ def main():
 
     args = parser.parse_args()
     
-    env_file_name = '../IMRLEnv_{}/IMRLEnv'.format('Linux_Headless')
-    if(args.platform == 'windows-desktop'):
-        env_file_name = '../IMRLEnv_{}/IMRLEnv'.format('Windows_Desktop')
-    elif(args.platform == 'windows-server'):
-        env_file_name = '../IMRLEnv_{}/IMRLEnv'.format('Windows_Headless')
-    elif(args.platform == 'linux-desktop'):
-        env_file_name = '../IMRLEnv_{}/IMRLEnv'.format('Linux_Desktop')
-
-
+    env_file_name = '../IMRLEnv_{}/IMRLEnv'.format(args.platform)
     env = UnityEnvironment(file_name=env_file_name)
-    RandomAgent.main(env)
+    
+    if args.agent == 'random_agent':
+        random_agent.main(env)
+    elif args.agent == 'dqn_agent':
+        dqn_agent.main(env)
 
 
 if __name__ == '__main__':

@@ -14,6 +14,8 @@ def main(env : UnityEnvironment):
     print(f'name of behavior:{behavior_name}')
     spec = env.behavior_specs[behavior_name]
 
+    print("... RANDOM AGENT STARTS ...")
+
     for ep in range(10):
 
         print("episode : {}".format(ep+1))
@@ -28,6 +30,7 @@ def main(env : UnityEnvironment):
         done = False
         ep_rewards = 0
 
+        counter = 0
         while not done:
             if tracked_agent == -1 and len(decision_steps) >= 1:
                 tracked_agent = decision_steps.agent_id[0]
@@ -41,11 +44,18 @@ def main(env : UnityEnvironment):
 
             decision_steps, terminal_steps = env.get_steps(behavior_name)
 
+            if counter / 50 == 0:
+                print(decision_steps.obs)
+                print(decision_steps.reward)
+                print(action)
+
             if tracked_agent in decision_steps:
                 ep_rewards += decision_steps[tracked_agent].reward
             if tracked_agent in terminal_steps:
                 ep_rewards += terminal_steps[tracked_agent].reward
                 done = True
+            
+            counter += 1
 
         print(f'total reward for ep {ep} is {ep_rewards}')
 

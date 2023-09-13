@@ -80,5 +80,6 @@ Also, this environment was tested in these conditions
 
 ## Changes
 
+- 2023.09.13 : made DQN agnet(not confirmed) and changed folder names to run IMRLEnv_main.py easily
 - 2023.08.21 : solved environment reset problem, uploaded several different platform version of IMRLEnv, add argument option to select platform.
 - 2023.08.17 : first commit
