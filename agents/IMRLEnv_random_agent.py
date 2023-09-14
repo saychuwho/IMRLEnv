@@ -18,7 +18,7 @@ def main(env : UnityEnvironment):
 
     for ep in range(10):
 
-        print("episode : {}".format(ep+1))
+        print("... episode : {} ...".format(ep+1))
 
         # SideChannel logic
         #channel.send_string("0,{}".format(ep+1))
@@ -44,10 +44,8 @@ def main(env : UnityEnvironment):
 
             decision_steps, terminal_steps = env.get_steps(behavior_name)
 
-            if counter / 50 == 0:
-                print(decision_steps.obs)
-                print(decision_steps.reward)
-                print(action)
+            # print("step : {}".format(counter))
+            # print("reward : {}".format(decision_steps[tracked_agent].reward))
 
             if tracked_agent in decision_steps:
                 ep_rewards += decision_steps[tracked_agent].reward

@@ -30,7 +30,7 @@ Arguments may added further.
   - Each lane has traffic light with red, yellow, green light.
 
 - Observation : vector observation
-  - Traffic Light State : one-hot encoding : 3*112
+  - Traffic Light State : one-hot encoding : 3*12
   - Vehicles average waiting time by lanes : 12
   - Total observation size : 48
 
@@ -40,9 +40,8 @@ Arguments may added further.
   - Total action size : 12
 
 - Reward
-  - ~~At every step, "scaled total average waiting time" will given as minus reward~~
-    - step reward is not given now.
-  - At the end of episode, "scaled total average traveling time will given as plus reward
+  - At every step, "diffence of average waiting time" will given as reward
+  - "diffence of average waiting time" = (reward of before step) - (normalized average waiting time of this step)
 
 - End of Episode
   - When certain amount of vehicles pass through Intersection
@@ -80,6 +79,7 @@ Also, this environment was tested in these conditions
 
 ## Changes
 
+- 2023.09.14 : changed reward with "diffence of average waiting time", made server version app displays information of env in console at the begining of episode.
 - 2023.09.13 : made DQN agnet(not confirmed) and changed folder names to run IMRLEnv_main.py easily
 - 2023.08.21 : solved environment reset problem, uploaded several different platform version of IMRLEnv, add argument option to select platform.
 - 2023.08.17 : first commit

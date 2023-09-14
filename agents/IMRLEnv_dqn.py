@@ -164,7 +164,7 @@ def main(Env: UnityEnvironment):
     behavior_name = list(env.behavior_specs.keys())[0]
     spec = env.behavior_specs[behavior_name]
     # time scale should be setted as env setting
-    # engine_configuration_channel.set_configuration_parameters(time_scale=12.0) 
+    engine_configuration_channel.set_configuration_parameters(time_scale=12.0) 
     dec, term = env.get_steps(behavior_name)
 
     agent = DQNAgent()
