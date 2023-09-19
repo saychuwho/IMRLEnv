@@ -47,10 +47,12 @@ Arguments may added further.
   - When certain amount of vehicles pass through Intersection
   - When "total average waiting time" exceed "allowed waiting time"
 
+- At training mode, time scale will be 12.
+
 ## Agents
 
 - Random Agent
-- DQN based Agent(Work in Progress)
+- DQN based Agent(code is done, specific parameters needed to update)
 
 ## Platform Setting
 
@@ -79,6 +81,7 @@ Also, this environment was tested in these conditions
 
 ## Changes
 
+- 2023.09.19 : changed time scale will be 12, DQN code is finished.
 - 2023.09.14 : changed reward with "diffence of average waiting time", made server version app displays information of env in console at the begining of episode.
 - 2023.09.13 : made DQN agnet(not confirmed) and changed folder names to run IMRLEnv_main.py easily
 - 2023.08.21 : solved environment reset problem, uploaded several different platform version of IMRLEnv, add argument option to select platform.

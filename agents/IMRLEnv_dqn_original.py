@@ -1,6 +1,8 @@
 '''
 dqn for IMRLEnv
-main code is from book "파이토치와 유니티 ML-Agents로 배우는 강화학습" DQNAgent.py and I modified it with episode based iteration at main()
+main code is from book "파이토치와 유니티 ML-Agents로 배우는 강화학습" DQNAgent.py
+
+this code is not working. working dqn agent is at IMRLEnv_dqn.py
 
 original code is made for visual observation. IMRLEnv uses vector obs, so I modified that points
 
@@ -36,7 +38,7 @@ class DataForDQN:
     run_step = 50000
     test_step = 5000
     train_start_step = 300
-    target_update_step = 300
+    target_update_step = 500
 
     print_interval = 1
     save_interval = 100
@@ -166,6 +168,7 @@ def main(Env: UnityEnvironment):
     spec = env.behavior_specs[behavior_name]
     # time scale should be setted as env setting
     # engine_configuration_channel.set_configuration_parameters(time_scale=12.0) 
+    dec, term = env.get_steps(behavior_name)
 
     agent = DQNAgent()
 
@@ -177,9 +180,8 @@ def main(Env: UnityEnvironment):
 
     print("... DQN STARTS ...")
 
-    step = 0
-
-    while(step <= dqn_data.run_step + dqn_data.test_step):
+    
+    for step in range(dqn_data.run_step + dqn_data.test_step):
         if step == dqn_data.run_step:
             if train_mode:
                 agent.save_model()
@@ -187,65 +189,63 @@ def main(Env: UnityEnvironment):
             train_mode = False
             engine_configuration_channel.set_configuration_parameters(time_scale=1.0)
         
-        episode += 1
-        print("... episode : {} starts ...".format(episode))
-
-        env.reset()
-        dec, term = env.get_steps(behavior_name)
-
-        env_reset = False
-
-        while not env_reset:
-
-            if step % 100 == 0:
-                print("... step {} passed ...".format(step))
-            
-            state = dec.obs[0] # obs contains vector obs
-            action = agent.get_action(state, train_mode)
-            action_tuple = ActionTuple()
-            action_tuple.add_discrete(action)
-
-            env.set_actions(behavior_name, action_tuple)
-            env.step()
-
-            dec, term = env.get_steps(behavior_name)
-            done = len(term.agent_id) > 0
-            reward = term.reward if done else dec.reward
-            next_state = term.obs[0] if done else dec.obs[0]
-            score += reward[0]
+        if env_reset:
+            env.reset()
+            env_reset = False
+            step -= 1
+            continue
         
-            if train_mode:
-                agent.append_sample(state, action, reward, next_state, [done])
+        if step % 100 == 0:
+            print("... step {} passed ...".format(step))
 
-            if train_mode and step > max(dqn_data.batch_size, dqn_data.train_start_step):
-                loss = agent.train_model()
-                losses.append(loss)
+        state = dec.obs[0] # obs contains vector obs
+        action = agent.get_action(state, train_mode)
+        action_tuple = ActionTuple()
+        action_tuple.add_discrete(action)
 
-                if step % dqn_data.target_update_step == 0:
-                    print("... updating target ...")
-                    agent.update_target()
-            
-            if done:
-                print("... episode done ...")
-                env_reset = True
 
-                scores.append(score)
-                score = 0
+        env.set_actions(behavior_name, action_tuple)
+        env.step()
 
-                if episode % dqn_data.print_interval == 0:
-                    mean_score = np.mean(scores)
-                    mean_loss = np.mean(losses)
-                    agent.write_summary(mean_score, mean_loss, agent.epsilon, step)
-                    losses, scores = [], []
+        dec, term = env.get_steps(behavior_name)
+        done = len(term.agent_id) > 0
+        reward = term.reward if done else dec.reward
+        next_state = term.obs[0] if done else dec.obs[0]
+        score += reward[0]
 
-                    print(f"{episode} Episode / Step: {step} / Score: {mean_score:.2f} / " +\
-                        f"Loss: {mean_loss:.4f} / Epsilon: {agent.epsilon:.4f}")
-                    
-                if train_mode and episode % dqn_data.save_interval == 0:
-                    agent.save_model()
-            
-            # add step to 
-            step += 1 
+        # debug
+        print("###DEBUG###\n{} {}".format(state, step))
+
+        if train_mode:
+            agent.append_sample(state, action, reward, next_state, [done])
+
+        if train_mode and step > max(dqn_data.batch_size, dqn_data.train_start_step):
+            loss = agent.train_model()
+            losses.append(loss)
+
+            if step % dqn_data.target_update_step == 0:
+                print("... updating target ...")
+                agent.update_target()
+        
+        if done:
+            print("... episode done ...")
+            env_reset = True
+
+            episode += 1
+            scores.append(score)
+            score = 0
+
+            if episode % dqn_data.print_interval == 0:
+                mean_score = np.mean(scores)
+                mean_loss = np.mean(losses)
+                agent.write_summary(mean_score, mean_loss, agent.epsilon, step)
+                losses, scores = [], []
+
+                print(f"{episode} Episode / Step: {step} / Score: {mean_score:.2f} / " +\
+                      f"Loss: {mean_loss:.4f} / Epsilon: {agent.epsilon:.4f}")
+                
+            if train_mode and episode % dqn_data.save_interval == 0:
+                agent.save_model()
 
             
     env.close()
