@@ -81,6 +81,7 @@ Also, this environment was tested in these conditions
 
 ## Changes
 
+- 2023.09.20 : made IMRLEnv_data.py to handle parameters / changed environment parameters for better scoring
 - 2023.09.19 : changed time scale will be 12, DQN code is finished.
 - 2023.09.14 : changed reward with "diffence of average waiting time", made server version app displays information of env in console at the begining of episode.
 - 2023.09.13 : made DQN agnet(not confirmed) and changed folder names to run IMRLEnv_main.py easily

@@ -44,6 +44,7 @@ def main(env : UnityEnvironment):
 
             decision_steps, terminal_steps = env.get_steps(behavior_name)
 
+            #print(decision_steps.obs[0])
             # print("step : {}".format(counter))
             # print("reward : {}".format(decision_steps[tracked_agent].reward))
 

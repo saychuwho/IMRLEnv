@@ -19,49 +19,7 @@ from collections import deque
 from mlagents_envs.environment import UnityEnvironment, ActionTuple
 from mlagents_envs.side_channel.engine_configuration_channel import EngineConfigurationChannel
 
-
-class DataForDQN:
-    state_size = 48 # state size of IMRLEnv : 3*12(traffic light one-hot encoding) + 12(average waiting time)
-    action_size = 13 # action size of IMRLEnv : 0 ~ 11(traffic light number), 12(no-op)
-
-    # This section need to be parameterized
-    load_model = False
-    train_mode = True
-
-    batch_size = 32
-    mem_maxlen = 10000
-    discount_factor = 0.9
-    learning_rate = 0.00025
-
-    run_step = 50000
-    test_step = 5000
-    train_start_step = 300
-    target_update_step = 300
-
-    print_interval = 1
-    save_interval = 100
-
-    # Using epsilon-greedy policy. Future work should add boltzmann policy
-    epsilon_eval = 0.5
-    epsilon_init = 0.9
-    epsilon_min = 0.1
-    explore_step = run_step*0.8
-    epsilon_delta = (epsilon_init - epsilon_min)/explore_step if train_mode else 0
-
-    '''
-    # these are not needed in this code
-    VISUAL_OBS = 0
-    GOAL_OBS = 1
-    VECTOR_OBS = 2
-    OBS = VECTOR_OBS
-    '''
-
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    date_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    save_path = f"../saved_models/DQN/{date_time}"
-    load_path = f"../saved_models/DQN/{date_time}" # should modified to get certain path to execute
-
+from IMRLEnv_data import DataForDQN
 
 '''
 changed DQN(Q function) into Linear. Because IMRLEnv has vector observation. not visual obs
@@ -97,9 +55,7 @@ class DQNAgent:
             self.target_network.loat_state_dict(checkpoint["network"])
             self.optimizer.load_state_dict(checkpoint["optimizer"])
 
-    # using epsilon-greedy first. future work should add boltzmann policy
-    def get_action(self, state, training=True):
-        self.network.train(training)
+    def epsilon_greedy_policy(self, state, training):
         epsilon = self.epsilon if training else self.dqn_data.epsilon_eval
 
         if epsilon > random.random():
@@ -107,6 +63,19 @@ class DQNAgent:
         else:
             q = self.network(torch.FloatTensor(state).to(self.dqn_data.device))
             action = torch.argmax(q, axis=-1, keepdim=True).data.cpu().numpy()
+        
+        return action
+
+    def boltzmann_policy(self, state, training):
+        pass
+
+    # using epsilon-greedy first. future work should add boltzmann policy
+    def get_action(self, state, training=True, is_epsilon=True):
+        self.network.train(training)
+        
+        if is_epsilon:
+            action = self.epsilon_greedy_policy(state, training)
+
         return action
     
     def append_sample(self, state, action, reward, next_state, done):
@@ -154,7 +123,6 @@ class DQNAgent:
         self.writer.add_scalar("model/loss", loss, step)
         self.writer.add_scalar("model/epsilon", epsilon, step)
 
-
 def main(Env: UnityEnvironment):
     dqn_data = DataForDQN
 
@@ -176,11 +144,12 @@ def main(Env: UnityEnvironment):
     env_reset = False
 
     print("... DQN STARTS ...")
+    dqn_data.data_print()
 
     step = 0
 
     while(step <= dqn_data.run_step + dqn_data.test_step):
-        if step == dqn_data.run_step:
+        if step >= dqn_data.run_step:
             if train_mode:
                 agent.save_model()
             print("... TEST START ...")
@@ -197,11 +166,11 @@ def main(Env: UnityEnvironment):
 
         while not env_reset:
 
-            if step % 100 == 0:
+            if step % 10000 == 0:
                 print("... step {} passed ...".format(step))
             
             state = dec.obs[0] # obs contains vector obs
-            action = agent.get_action(state, train_mode)
+            action = agent.get_action(state, train_mode, dqn_data.is_epsilon)
             action_tuple = ActionTuple()
             action_tuple.add_discrete(action)
 
