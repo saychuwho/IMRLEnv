@@ -48,22 +48,22 @@ class DataForDQN:
     save_path = f"../saved_models/DQN/{date_time}"
     load_path = f"../saved_models/DQN/{date_time}" # should modified to get certain path to execute
 
-    def data_print(self):
-        print("... Data Fro DQN ...")
-        print("state size : {}".format(self.state_size))
-        print("action size : {}".format(self.action_size))
-        print("batch size : {}".format(self.batch_size))
-        print("experience memory max size : {}".format(self.mem_maxlen))
-        print("discount factor : {}".format(self.discount_factor))
-        print("learning rate : {}".format(self.learning_rate))
-        print("run step : {}".format(self.run_step))
-        print("test step : {}".format(self.test_step))
-        print("train start step : {}".format(self.train_start_step))
-        print("target update step : {}".format(self.target_update_step))
-        print("print interval(episode) : {}".format(self.print_interval))
-        print("save interval(episode) : {}".format(self.save_interval))
-        print("epsilon greedy policy : {}".format(self.is_epsilon))
-        print("epsilon init : {} / epsilon min : {} / epsilon decrese step : {}".format(self.epsilon_init, 
-                                                                                        self.epsilon_min, self.explore_step))
-        print("torch device : {}".format(self.device))
-        print("save path : {}".format(self.save_path))
+def dqn_data_print(dqn_data):
+    print("... Data Fro DQN ...")
+    print("state size : {}".format(dqn_data.state_size))
+    print("action size : {}".format(dqn_data.action_size))
+    print("batch size : {}".format(dqn_data.batch_size))
+    print("experience memory max size : {}".format(dqn_data.mem_maxlen))
+    print("discount factor : {}".format(dqn_data.discount_factor))
+    print("learning rate : {}".format(dqn_data.learning_rate))
+    print("run step : {}".format(dqn_data.run_step))
+    print("test step : {}".format(dqn_data.test_step))
+    print("train start step : {}".format(dqn_data.train_start_step))
+    print("target update step : {}".format(dqn_data.target_update_step))
+    print("print interval(episode) : {}".format(dqn_data.print_interval))
+    print("save interval(episode) : {}".format(dqn_data.save_interval))
+    print("epsilon greedy policy : {}".format(dqn_data.is_epsilon))
+    print("epsilon init : {} / epsilon min : {} / epsilon decrese step : {}".format(dqn_data.epsilon_init, 
+                                                                                    dqn_data.epsilon_min, dqn_data.explore_step))
+    print("torch device : {}".format(dqn_data.device))
+    print("save path : {}".format(dqn_data.save_path))

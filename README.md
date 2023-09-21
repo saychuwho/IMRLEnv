@@ -31,7 +31,7 @@ Arguments may added further.
 
 - Observation : vector observation
   - Traffic Light State : one-hot encoding : 3*12
-  - Vehicles average waiting time by lanes : 12
+  - Vehicles average waiting time by lanes descripted with 0~3 : 12
   - Total observation size : 48
 
 - Action : Discrete
@@ -41,7 +41,7 @@ Arguments may added further.
 
 - Reward
   - At every step, "diffence of average waiting time" will given as reward
-  - "diffence of average waiting time" = (reward of before step) - (normalized average waiting time of this step)
+  - "diffence of average waiting time" = sum of normalized [(allowed wait time) - (average waiting time by lane)]^2
 
 - End of Episode
   - When certain amount of vehicles pass through Intersection
@@ -81,6 +81,7 @@ Also, this environment was tested in these conditions
 
 ## Changes
 
+- 2023.09.21 : updated reward function / changed DQN's Q function with more complex network
 - 2023.09.20 : made IMRLEnv_data.py to handle parameters / changed environment parameters for better scoring
 - 2023.09.19 : changed time scale will be 12, DQN code is finished.
 - 2023.09.14 : changed reward with "diffence of average waiting time", made server version app displays information of env in console at the begining of episode.

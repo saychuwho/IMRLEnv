@@ -19,7 +19,7 @@ from collections import deque
 from mlagents_envs.environment import UnityEnvironment, ActionTuple
 from mlagents_envs.side_channel.engine_configuration_channel import EngineConfigurationChannel
 
-from IMRLEnv_data import DataForDQN
+from IMRLEnv_data import DataForDQN, dqn_data_print
 
 '''
 changed DQN(Q function) into Linear. Because IMRLEnv has vector observation. not visual obs
@@ -28,13 +28,15 @@ class Q_function(torch.nn.Module):
     def __init__(self, **kwargs):
         super(Q_function, self).__init__(**kwargs)
         self.dqn_data = DataForDQN
-        self.d1 = torch.nn.Linear(self.dqn_data.state_size, 128)
-        self.d2 = torch.nn.Linear(128,128)
-        self.q = torch.nn.Linear(128,self.dqn_data.action_size)
+        self.d1 = torch.nn.Linear(self.dqn_data.state_size, 256)
+        self.d2 = torch.nn.Linear(256,256)
+        self.d3 = torch.nn.Linear(256,256)
+        self.q = torch.nn.Linear(256,self.dqn_data.action_size)
     
     def forward(self,x):
         x = F.relu(self.d1(x))
         x = F.relu(self.d2(x))
+        x = F.relu(self.d3(x))
         return self.q(x)
     
 
@@ -144,7 +146,7 @@ def main(Env: UnityEnvironment):
     env_reset = False
 
     print("... DQN STARTS ...")
-    dqn_data.data_print()
+    dqn_data_print(dqn_data)
 
     step = 0
 
@@ -207,7 +209,7 @@ def main(Env: UnityEnvironment):
                     agent.write_summary(mean_score, mean_loss, agent.epsilon, step)
                     losses, scores = [], []
 
-                    print(f"{episode} Episode / Step: {step} / Score: {mean_score:.2f} / " +\
+                    print(f"{episode} Episode / Step: {step} / Score: {mean_score:.7f} / " +\
                         f"Loss: {mean_loss:.4f} / Epsilon: {agent.epsilon:.4f}")
                     
                 if train_mode and episode % dqn_data.save_interval == 0:
