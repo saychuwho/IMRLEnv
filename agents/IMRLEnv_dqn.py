@@ -125,6 +125,10 @@ class DQNAgent:
         self.writer.add_scalar("model/loss", loss, step)
         self.writer.add_scalar("model/epsilon", epsilon, step)
 
+    def write_reward(self, reward, step):
+        self.writer.add_scalar("run/reward", reward, step)
+
+
 def main(Env: UnityEnvironment):
     dqn_data = DataForDQN
 
@@ -183,6 +187,9 @@ def main(Env: UnityEnvironment):
             done = len(term.agent_id) > 0
             reward = term.reward if done else dec.reward
             next_state = term.obs[0] if done else dec.obs[0]
+            
+            agent.write_reward(reward[0], step)
+            
             score += reward[0]
         
             if train_mode:
