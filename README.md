@@ -81,6 +81,7 @@ Also, this environment was tested in these conditions
 
 ## Changes
 
+- 2023.10.24 : added infoFile.txt to change parameters inside IMRLEnv
 - 2023.09.21 : updated reward function / changed DQN's Q function with more complex network
 - 2023.09.20 : made IMRLEnv_data.py to handle parameters / changed environment parameters for better scoring
 - 2023.09.19 : changed time scale will be 12, DQN code is finished.

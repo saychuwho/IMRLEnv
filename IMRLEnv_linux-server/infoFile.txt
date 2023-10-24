@@ -1,0 +1,8 @@
+50
+50
+12
+0,1,0,0,1,0,0,1,0,0,1,0
+// 1 : amount car at scene
+// 2 : allowed wait time
+// 3 : time multiplier
+// 4 : allowed lane multiplier
